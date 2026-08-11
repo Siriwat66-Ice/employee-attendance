@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ระบบลงเวลาพนักงาน</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 30px 18px;
+      font-family: "Prompt", "Tahoma", sans-serif;
+      color: #182033;
+      background:
+        radial-gradient(circle at top left, #dbeafe, transparent 38%),
+        linear-gradient(135deg, #f8fafc, #eef2ff);
+    }
+
+    .container {
+      width: min(1050px, 100%);
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      margin-bottom: 7px;
+      font-size: clamp(25px, 4vw, 38px);
+    }
+
+    .header p {
+      color: #64748b;
+    }
+
+    .live-time {
+      min-width: 210px;
+      padding: 15px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      text-align: center;
+      backdrop-filter: blur(15px);
+    }
+
+    #currentDate {
+      margin-bottom: 4px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    #currentTime {
+      color: #2563eb;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .scan-card {
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.1);
+      backdrop-filter: blur(18px);
+    }
+
+    .scan-card h2 {
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .scan-description {
+      margin-bottom: 25px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 12px;
+      width: min(650px, 100%);
+      margin: 0 auto;
+    }
+
+    #cardInput {
+      flex: 1;
+      min-width: 0;
+      padding: 17px 20px;
+      border: 2px solid #dbe3ef;
+      border-radius: 15px;
+      outline: none;
+      background: #ffffff;
+      font-size: 18px;
+      text-align: center;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    #cardInput:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.12);
+    }
+
+    .scan-button {
+      padding: 16px 26px;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .scan-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .example-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .example-cards button {
+      padding: 8px 14px;
+      border: 1px solid #dbe3ef;
+      border-radius: 999px;
+      color: #475569;
+      background: #f8fafc;
+      cursor: pointer;
+    }
+
+    .example-cards button:hover {
+      color: #2563eb;
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .result {
+      display: none;
+      width: min(650px, 100%);
+      margin: 25px auto 0;
+      padding: 21px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .result.show {
+      display: block;
+      animation: resultAppear 0.3s ease;
+    }
+
+    .result.check-in {
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      background: #ecfdf5;
+    }
+
+    .result.check-out {
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .result.error {
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+    }
+
+    .result-icon {
+      margin-bottom: 8px;
+      font-size: 35px;
+    }
+
+    .result h3 {
+      margin-bottom: 8px;
+    }
+
+    .result-name {
+      margin-bottom: 5px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .records-section {
+      margin-top: 25px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      font-size: 21px;
+    }
+
+    .clear-button {
+      padding: 9px 14px;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      color: #dc2626;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      color: #64748b;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 15px;
+    }
+
+    .employee-name {
+      font-weight: 700;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status.working {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .status.finished {
+      color: #475569;
+      background: #e2e8f0;
+    }
+
+    .empty-message {
+      padding: 30px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    @keyframes resultAppear {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .live-time {
+        width: 100%;
+      }
+
+      .scan-card,
+      .records-section {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .scan-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header class="header">
+      <div>
+        <h1>ระบบลงเวลาพนักงาน</h1>
+        <p>ทดสอบการเข้างานและออกงานด้วยการพิมพ์รหัสบัตร</p>
+      </div>
+
+      <div class="live-time">
+        <div id="currentDate"></div>
+        <div id="currentTime">00:00:00</div>
+      </div>
+    </header>
+
+    <section class="scan-card">
+      <h2>พิมพ์รหัสพนักงาน</h2>
+
+      <p class="scan-description">
+        พิมพ์รหัสแล้วกด Enter หรือกดปุ่มลงเวลา
+      </p>
+
+      <div class="input-group">
+        <input
+          type="text"
+          id="cardInput"
+          placeholder="ตัวอย่าง CARD001"
+          autocomplete="off"
+          autofocus
+        >
+
+        <button
+          type="button"
+          class="scan-button"
+          id="scanButton"
+        >
+          ลงเวลา
+        </button>
+      </div>
+
+      <div class="example-cards">
+        <button type="button" data-card="CARD001">
+          ทดลอง CARD001
+        </button>
+
+        <button type="button" data-card="CARD002">
+          ทดลอง CARD002
+        </button>
+
+        <button type="button" data-card="CARD003">
+          ทดลอง CARD003
+        </button>
+      </div>
+
+      <div id="result" class="result"></div>
+    </section>
+
+    <section class="records-section">
+      <div class="section-heading">
+        <h2>ประวัติการลงเวลา</h2>
+
+        <button
+          type="button"
+          class="clear-button"
+          id="clearButton"
+        >
+          ล้างประวัติ
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>พนักงาน</th>
+              <th>รหัสบัตร</th>
+              <th>วันที่</th>
+              <th>เวลาเข้า</th>
+              <th>เวลาออก</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+
+          <tbody id="recordTableBody"></tbody>
+        </table>
+
+        <div id="emptyMessage" class="empty-message">
+          ยังไม่มีประวัติการลงเวลา
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // รายชื่อพนักงานตัวอย่าง
+    // เปลี่ยนชื่อและรหัสตรงนี้ได้
+    const employees = [
+      {
+        employeeId: "EMP001",
+        cardId: "CARD001",
+        name: "สมชาย ใจดี",
+        position: "ฝ่ายผลิต"
+      },
+      {
+        employeeId: "EMP002",
+        cardId: "CARD002",
+        name: "สุดา มั่นคง",
+        position: "ฝ่ายคลังสินค้า"
+      },
+      {
+        employeeId: "EMP003",
+        cardId: "CARD003",
+        name: "อนันต์ ตั้งใจ",
+        position: "ฝ่ายจัดส่ง"
+      }
+    ];
+
+    const cardInput = document.getElementById("cardInput");
+    const scanButton = document.getElementById("scanButton");
+    const result = document.getElementById("result");
+    const recordTableBody =
+      document.getElementById("recordTableBody");
+    const emptyMessage =
+      document.getElementById("emptyMessage");
+    const clearButton =
+      document.getElementById("clearButton");
+
+    // อ่านข้อมูลเดิมจาก Local Storage
+    let attendanceRecords = JSON.parse(
+      localStorage.getItem("attendanceRecords")
+    ) || [];
+
+    function saveRecords() {
+      localStorage.setItem(
+        "attendanceRecords",
+        JSON.stringify(attendanceRecords)
+      );
+    }
+
+    function getDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDate(dateValue) {
+      return new Date(dateValue).toLocaleDateString("th-TH", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function formatTime(dateValue) {
+      if (!dateValue) {
+        return "-";
+      }
+
+      return new Date(dateValue).toLocaleTimeString("th-TH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+
+    function updateClock() {
+      const now = new Date();
+
+      document.getElementById("currentDate").textContent =
+        now.toLocaleDateString("th-TH", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        });
+
+      document.getElementById("currentTime").textContent =
+        now.toLocaleTimeString("th-TH", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+    }
+
+    function showResult(type, title, employee, time, message) {
+      result.className = `result show ${type}`;
+
+      let icon = "✅";
+
+      if (type === "check-out") {
+        icon = "👋";
+      }
+
+      if (type === "error") {
+        icon = "⚠️";
+      }
+
+      if (employee) {
+        result.innerHTML = `
+          <div class="result-icon">${icon}</div>
+          <h3>${title}</h3>
+          <div class="result-name">${employee.name}</div>
+          <div>${employee.position}</div>
+          <div style="margin-top:8px;">
+            เวลา ${time}
+          </div>
+        `;
+      } else {
+        result.innerHTML = `
+          <div class="result-icon">${icon}</div>
+          <h3>${title}</h3>
+          <div>${message}</div>
+        `;
+      }
+    }
+
+    function scanCard() {
+      const cardId = cardInput.value
+        .trim()
+        .toUpperCase();
+
+      if (!cardId) {
+        showResult(
+          "error",
+          "กรุณากรอกรหัส",
+          null,
+          null,
+          "พิมพ์รหัส เช่น CARD001"
+        );
+
+        cardInput.focus();
+        return;
+      }
+
+      const employee = employees.find(
+        item => item.cardId === cardId
+      );
+
+      if (!employee) {
+        showResult(
+          "error",
+          "ไม่พบข้อมูลพนักงาน",
+          null,
+          null,
+          `ไม่มีรหัส ${cardId} อยู่ในระบบ`
+        );
+
+        cardInput.select();
+        return;
+      }
+
+      const now = new Date();
+      const today = getDateKey(now);
+
+      // ตรวจสอบว่าพนักงานคนนี้เข้างานอยู่หรือไม่
+      const openRecord = [...attendanceRecords]
+        .reverse()
+        .find(record =>
+          record.employeeId === employee.employeeId &&
+          record.dateKey === today &&
+          record.checkOut === null
+        );
+
+      if (openRecord) {
+        // ถ้ามีเวลาเข้าแต่ยังไม่มีเวลาออก
+        // การพิมพ์ครั้งนี้จะเป็นการออกงาน
+        openRecord.checkOut = now.toISOString();
+
+        showResult(
+          "check-out",
+          "ลงเวลาออกงานสำเร็จ",
+          employee,
+          formatTime(now)
+        );
+      } else {
+        // ถ้ายังไม่มีรายการเปิดอยู่
+        // การพิมพ์ครั้งนี้จะเป็นการเข้างาน
+        attendanceRecords.push({
+          recordId: Date.now(),
+          employeeId: employee.employeeId,
+          cardId: employee.cardId,
+          name: employee.name,
+          position: employee.position,
+          dateKey: today,
+          checkIn: now.toISOString(),
+          checkOut: null
+        });
+
+        showResult(
+          "check-in",
+          "ลงเวลาเข้างานสำเร็จ",
+          employee,
+          formatTime(now)
+        );
+      }
+
+      saveRecords();
+      renderRecords();
+
+      cardInput.value = "";
+      cardInput.focus();
+    }
+
+    function renderRecords() {
+      recordTableBody.innerHTML = "";
+
+      if (attendanceRecords.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+      }
+
+      emptyMessage.style.display = "none";
+
+      const sortedRecords = [...attendanceRecords].sort(
+        (a, b) =>
+          new Date(b.checkIn) - new Date(a.checkIn)
+      );
+
+      sortedRecords.forEach(record => {
+        const row = document.createElement("tr");
+
+        const isWorking = record.checkOut === null;
+
+        row.innerHTML = `
+          <td>
+            <div class="employee-name">${record.name}</div>
+            <small Style="color:#64748b;">
+              ${record.position}
+            </small>
+          </td>
+
+          <td>${record.cardId}</td>
+
+          <td>${formatDate(record.checkIn)}</td>
+
+          <td>${formatTime(record.checkIn)}</td>
+
+          <td>${formatTime(record.checkOut)}</td>
+
+          <td>
+            <span class="status ${
+              isWorking ? "working" : "finished"
+            }">
+              ${
+                isWorking
+                  ? "กำลังปฏิบัติงาน"
+                  : "ออกงานแล้ว"
+              }
+            </span>
+          </td>
+        `;
+
+        recordTableBody.appendChild(row);
+      });
+    }
+
+    scanButton.addEventListener("click", scanCard);
+
+    cardInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        scanCard();
+      }
+    });
+
+    document
+      .querySelectorAll("[data-card]")
+      .forEach(button => {
+        button.addEventListener("click", () => {
+          cardInput.value = button.dataset.card;
+          scanCard();
+        });
+      });
+
+    clearButton.addEventListener("click", () => {
+      const confirmed = confirm(
+        "ต้องการล้างประวัติการลงเวลาทั้งหมดหรือไม่?"
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      attendanceRecords = [];
+      saveRecords();
+      renderRecords();
+
+      result.className = "result";
+      result.innerHTML = "";
+
+      cardInput.focus();
+    });
+
+    document.addEventListener("click", event => {
+      if (
+        event.target.tagName !== "BUTTON" &&
+        event.target.tagName !== "INPUT"
+      ) {
+        cardInput.focus();
+      }
+    });
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderRecords();
+  </script>
+
+</body>
+</html>
