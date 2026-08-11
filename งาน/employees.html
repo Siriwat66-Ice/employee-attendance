@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>รายชื่อพนักงาน</title>
+
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  >
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <aside class="sidebar">
+
+      <a
+        class="sidebar-logo"
+        href="./dashboard.html"
+      >
+        HR
+      </a>
+
+      <nav class="sidebar-nav">
+
+        <a href="./dashboard.html">
+          <span class="nav-icon">▦</span>
+          <span>สถานะ</span>
+        </a>
+
+        <a href="./index.html">
+          <span class="nav-icon">⌨</span>
+          <span>ลงเวลา</span>
+        </a>
+
+        <a
+          class="active"
+          href="./employees.html"
+        >
+          <span class="nav-icon">👥</span>
+          <span>พนักงาน</span>
+        </a>
+
+      </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+      <header class="dashboard-header">
+
+        <div>
+
+          <p class="eyebrow">
+            EMPLOYEE DIRECTORY
+          </p>
+
+          <h1>รายชื่อพนักงาน</h1>
+
+          <p class="muted">
+            เพิ่ม แก้ไข ลบ ค้นหา และใส่รูปพนักงาน
+          </p>
+
+        </div>
+
+        <button
+          id="addEmployeeButton"
+          class="primary-button"
+          type="button"
+        >
+          + เพิ่มพนักงาน
+        </button>
+
+      </header>
+
+      <section class="surface-card employee-toolbar">
+
+        <label class="search-field employee-search-field">
+
+          <span>⌕</span>
+
+          <input
+            id="employeeSearch"
+            type="search"
+            placeholder="ค้นหาชื่อ รหัส แผนก หรือตำแหน่ง"
+          >
+
+        </label>
+
+        <p>
+          พนักงานทั้งหมด
+
+          <strong id="employeeTotalText">
+            0 คน
+          </strong>
+        </p>
+
+      </section>
+
+      <section class="surface-card employee-table-card">
+
+        <div class="table-scroll">
+
+          <table class="data-table employee-table">
+
+            <thead>
+              <tr>
+                <th>พนักงาน</th>
+                <th>รหัสพนักงาน</th>
+                <th>รหัสบัตร</th>
+                <th>แผนก / ตำแหน่ง</th>
+                <th>กะการทำงาน</th>
+                <th>สถานะวันนี้</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+
+            <tbody id="employeeTableBody"></tbody>
+
+          </table>
+
+          <div
+            id="employeeEmpty"
+            class="empty-state"
+          >
+            ไม่พบรายชื่อพนักงาน
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <div
+    id="employeeModal"
+    class="modal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close-modal
+    ></div>
+
+    <section class="modal-card">
+
+      <header class="modal-header">
+
+        <div>
+
+          <p class="eyebrow">
+            EMPLOYEE FORM
+          </p>
+
+          <h2 id="modalTitle">
+            เพิ่มพนักงาน
+          </h2>
+
+        </div>
+
+        <button
+          class="modal-close"
+          type="button"
+          data-close-modal
+        >
+          ×
+        </button>
+
+      </header>
+
+      <form id="employeeForm">
+
+        <input
+          id="employeeRecordId"
+          type="hidden"
+        >
+
+        <div class="photo-upload-row">
+
+          <div class="photo-preview-box">
+
+            <img
+              id="photoPreview"
+              class="photo-preview"
+              alt="รูปพนักงาน"
+            >
+
+            <div
+              id="photoPreviewInitial"
+              class="photo-preview-initial"
+            >
+              HR
+            </div>
+
+          </div>
+
+          <div>
+
+            <label class="upload-button">
+
+              เลือกรูปพนักงาน
+
+              <input
+                id="employeePhoto"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+              >
+
+            </label>
+
+            <p class="upload-note">
+              รองรับ JPG, PNG และ WebP ระบบจะย่อรูปให้อัตโนมัติ
+            </p>
+
+            <button
+              id="removePhotoButton"
+              class="remove-photo-button"
+              type="button"
+            >
+              ลบรูป
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="employee-form-grid">
+
+          <label>
+
+            <span>ชื่อ–นามสกุล</span>
+
+            <input
+              id="employeeName"
+              type="text"
+              placeholder="เช่น สมชาย ใจดี"
+              required
+            >
+
+          </label>
+
+          <label>
+
+            <span>รหัสพนักงาน</span>
+
+            <input
+              id="employeeId"
+              type="text"
+              placeholder="เช่น EMP004"
+              required
+            >
+
+          </label>
+
+          <label>
+
+            <span>รหัสบัตร</span>
+
+            <input
+              id="cardId"
+              type="text"
+              placeholder="เช่น CARD004"
+              required
+            >
+
+          </label>
+
+          <label>
+
+            <span>แผนก / Process</span>
+
+            <input
+              id="department"
+              type="text"
+              placeholder="เช่น CUT, ASM, QC หรือ PKG"
+              required
+            >
+
+          </label>
+
+          <label>
+
+            <span>ตำแหน่ง</span>
+
+            <input
+              id="position"
+              type="text"
+              placeholder="เช่น พนักงานผลิต"
+              required
+            >
+
+          </label>
+
+          <label>
+
+            <span>กะการทำงาน</span>
+
+            <select id="shift">
+
+              <option value="กะเช้า 08:00–17:00">
+                กะเช้า 08:00–17:00
+              </option>
+
+              <option value="กะกลางวัน 09:00–18:00">
+                กะกลางวัน 09:00–18:00
+              </option>
+
+              <option value="กะกลางคืน 20:00–05:00">
+                กะกลางคืน 20:00–05:00
+              </option>
+
+            </select>
+
+          </label>
+
+        </div>
+
+        <p
+          id="formError"
+          class="form-error"
+        ></p>
+
+        <footer class="modal-actions">
+
+          <button
+            class="secondary-button"
+            type="button"
+            data-close-modal
+          >
+            ยกเลิก
+          </button>
+
+          <button
+            class="primary-button"
+            type="submit"
+          >
+            บันทึกข้อมูล
+          </button>
+
+        </footer>
+
+      </form>
+
+    </section>
+
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./backend.js"></script>
+  <script src="./data.js"></script>
+  <script src="./employees.js"></script>
+
+</body>
+</html>
