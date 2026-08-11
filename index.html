@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ลงเวลาพนักงาน</title>
+
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  >
+</head>
+
+<body class="attendance-page">
+
+  <header class="public-header">
+
+    <a class="brand" href="./index.html">
+
+      <span class="brand-logo">
+        HR
+      </span>
+
+      <span>
+        <strong>Employee Time</strong>
+        <small>ระบบลงเวลาพนักงาน</small>
+      </span>
+
+    </a>
+
+    <nav class="public-nav">
+
+      <a
+        class="active"
+        href="./index.html"
+      >
+        ลงเวลา
+      </a>
+
+      <a href="./dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="./employees.html">
+        รายชื่อพนักงาน
+      </a>
+
+    </nav>
+
+  </header>
+
+  <main class="attendance-container">
+
+    <section class="attendance-grid">
+
+      <article class="clock-card">
+
+        <p id="currentDate">
+          กำลังโหลดวันที่...
+        </p>
+
+        <h1 id="currentTime">
+          00:00:00
+        </h1>
+
+        <span>เวลาปัจจุบัน</span>
+
+      </article>
+
+      <article class="attendance-card">
+
+        <div class="attendance-icon">
+          ⌨
+        </div>
+
+        <p class="eyebrow">
+          EMPLOYEE ATTENDANCE
+        </p>
+
+        <h2>ลงเวลาเข้า–ออกงาน</h2>
+
+        <p class="muted">
+          พิมพ์รหัสบัตรหรือรหัสพนักงาน แล้วกดค้นหา
+        </p>
+
+        <div class="attendance-form">
+
+          <input
+            id="cardInput"
+            type="text"
+            placeholder="ตัวอย่าง CARD001 หรือ EMP001"
+            autocomplete="off"
+            autofocus
+          >
+
+          <button
+            id="scanButton"
+            class="primary-button search-button"
+            type="button"
+          >
+            ค้นหา
+          </button>
+
+        </div>
+
+        <div class="demo-code-row">
+
+          <span>รหัสทดลอง:</span>
+
+          <button
+            type="button"
+            data-test-code="CARD001"
+          >
+            CARD001
+          </button>
+
+          <button
+            type="button"
+            data-test-code="CARD002"
+          >
+            CARD002
+          </button>
+
+          <button
+            type="button"
+            data-test-code="CARD003"
+          >
+            CARD003
+          </button>
+
+        </div>
+
+        <div
+          id="scanResult"
+          class="scan-result ready"
+        >
+
+          <div class="scan-photo-box">
+
+            <img
+              id="resultPhoto"
+              class="scan-photo"
+              alt="รูปพนักงาน"
+            >
+
+            <div
+              id="resultInitial"
+              class="scan-initial"
+            >
+              HR
+            </div>
+
+          </div>
+
+          <div class="scan-result-detail">
+
+            <h3 id="resultTitle">
+              พร้อมรับรหัสพนักงาน
+            </h3>
+
+            <p
+              id="resultName"
+              class="scan-result-name"
+            >
+              พิมพ์รหัสเพื่อเริ่มลงเวลา
+            </p>
+
+            <p
+              id="resultPosition"
+              class="scan-result-meta"
+            ></p>
+
+            <p
+              id="resultEmployeeId"
+              class="scan-result-meta"
+            ></p>
+
+            <strong
+              id="resultTime"
+              class="scan-result-time"
+            ></strong>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <section class="surface-card latest-card">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">TODAY</p>
+          <h2>รายการลงเวลาล่าสุด</h2>
+        </div>
+
+        <a
+          class="text-link"
+          href="./dashboard.html"
+        >
+          ดูทั้งหมด →
+        </a>
+
+      </div>
+
+      <div
+        id="latestAttendance"
+        class="latest-list"
+      ></div>
+
+    </section>
+
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="./backend.js"></script>
+  <script src="./data.js"></script>
+  <script src="./attendance.js"></script>
+
+</body>
+</html>

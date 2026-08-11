@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Dashboard พนักงาน</title>
+
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  >
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <aside class="sidebar">
+
+      <a
+        class="sidebar-logo"
+        href="./dashboard.html"
+      >
+        HR
+      </a>
+
+      <nav class="sidebar-nav">
+
+        <a
+          class="active"
+          href="./dashboard.html"
+        >
+          <span class="nav-icon">▦</span>
+          <span>สถานะ</span>
+        </a>
+
+        <a href="./index.html">
+          <span class="nav-icon">⌨</span>
+          <span>ลงเวลา</span>
+        </a>
+
+        <a href="./employees.html">
+          <span class="nav-icon">👥</span>
+          <span>พนักงาน</span>
+        </a>
+
+      </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+      <header class="dashboard-header">
+
+        <div>
+
+          <p class="eyebrow live-text">
+            ● LIVE MONITOR
+          </p>
+
+          <h1>สถานะการทำงานพนักงาน</h1>
+
+          <p class="muted">
+            ติดตามภาพรวมในแต่ละ Process แบบเรียลไทม์
+          </p>
+
+        </div>
+
+        <div class="dashboard-clock">
+
+          <p>◷ เวลาปัจจุบัน</p>
+
+          <strong id="dashboardTime">
+            00:00:00
+          </strong>
+
+          <span id="dashboardDate">
+            กำลังโหลดวันที่...
+          </span>
+
+        </div>
+
+      </header>
+
+      <section class="summary-grid">
+
+        <article class="summary-main-card">
+
+          <p>สรุปภาพรวมวันนี้</p>
+
+          <div class="summary-main-content">
+
+            <div>
+
+              <strong id="totalEmployees">
+                0
+              </strong>
+
+              <span>
+                พนักงานทั้งหมดในระบบ
+              </span>
+
+            </div>
+
+            <b id="todayRecordBadge">
+              0 รายการวันนี้
+            </b>
+
+          </div>
+
+        </article>
+
+        <article class="summary-small-card">
+
+          <div class="summary-icon green">
+            ▲
+          </div>
+
+          <div>
+
+            <p>กำลังทำงาน</p>
+
+            <strong id="workingEmployees">
+              0
+            </strong>
+
+            <small id="workingPercent">
+              0% ของพนักงาน
+            </small>
+
+          </div>
+
+        </article>
+
+        <article class="summary-small-card">
+
+          <div class="summary-icon orange">
+            Ⅱ
+          </div>
+
+          <div>
+
+            <p>ออกงานแล้ว</p>
+
+            <strong id="finishedEmployees">
+              0
+            </strong>
+
+            <small>
+              บันทึกเวลาออกแล้ววันนี้
+            </small>
+
+          </div>
+
+        </article>
+
+        <article class="summary-small-card warning-card">
+
+          <div class="summary-icon red">
+            !
+          </div>
+
+          <div>
+
+            <p>ต้องตรวจสอบ</p>
+
+            <strong id="notCheckedInEmployees">
+              0
+            </strong>
+
+            <small>
+              ยังไม่มีรายการเข้างาน
+            </small>
+
+          </div>
+
+        </article>
+
+      </section>
+
+      <section class="dashboard-section">
+
+        <div class="section-heading">
+
+          <div>
+
+            <h2>กำลังติดตาม Process</h2>
+
+            <p class="muted">
+              จำนวนพนักงานที่อยู่ในแต่ละแผนกวันนี้
+            </p>
+
+          </div>
+
+          <button
+            id="refreshDashboard"
+            class="text-button"
+            type="button"
+          >
+            ดูข้อมูลใหม่ →
+          </button>
+
+        </div>
+
+        <div
+          id="processGrid"
+          class="process-grid"
+        ></div>
+
+      </section>
+
+      <section class="surface-card dashboard-table-card">
+
+        <div class="section-heading">
+
+          <div>
+
+            <h2>สถานะพนักงานล่าสุด</h2>
+
+            <p class="muted">
+              อัปเดตจากข้อมูลการลงเวลาเข้า–ออกของวันนี้
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="filter-grid">
+
+          <label class="search-field">
+
+            <span>⌕</span>
+
+            <input
+              id="dashboardSearch"
+              type="search"
+              placeholder="ค้นหาชื่อ รหัสพนักงาน หรือแผนก"
+            >
+
+          </label>
+
+          <select id="departmentFilter">
+
+            <option value="">
+              ทุกแผนก
+            </option>
+
+          </select>
+
+          <select id="statusFilter">
+
+            <option value="">
+              ทุกสถานะ
+            </option>
+
+            <option value="working">
+              กำลังทำงาน
+            </option>
+
+            <option value="finished">
+              ออกงานแล้ว
+            </option>
+
+            <option value="absent">
+              ยังไม่เข้างาน
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="table-scroll">
+
+          <table class="data-table">
+
+            <thead>
+              <tr>
+                <th>พนักงาน</th>
+                <th>Process / แผนก</th>
+                <th>เวลาเข้า</th>
+                <th>เวลาออก</th>
+                <th>ระยะเวลา</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+
+            <tbody id="dashboardTableBody"></tbody>
+
+          </table>
+
+          <div
+            id="dashboardEmpty"
+            class="empty-state"
+          >
+            ไม่พบข้อมูลพนักงาน
+          </div>
+
+        </div>
+
+        <p
+          id="dashboardUpdated"
+          class="updated-text"
+        >
+          อัปเดตล่าสุด: -
+        </p>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./backend.js"></script>
+  <script src="./data.js"></script>
+  <script src="./dashboard.js"></script>
+
+</body>
+</html>
